@@ -1,4 +1,6 @@
-﻿namespace growth.Backend.Features.Unsplash;
+﻿using growth.Backend.Shared;
+
+namespace growth.Backend.Features.Unsplash;
 
 public class UnsplashService : IPhotoService
 {
@@ -11,27 +13,33 @@ public class UnsplashService : IPhotoService
         _apiKey = configuration["Unsplash:ApiKey"];
     }
 
-    public async Task<List<UnsplashResponse>> GetPhotos()
+    public async Task<Result<List<UnsplashResponse>>> GetPhotos()
     {
-        return await _httpClient.GetFromJsonAsync<List<UnsplashResponse>>(
-            $"collections/c5n86m1bPUk/photos/?client_id={_apiKey}") ?? throw new Exception();
+        var result = await _httpClient.GetFromJsonAsync<List<UnsplashResponse>>(
+            $"collections/c5n86m1bPUk/photos/?client_id={_apiKey}");
+
+        return result is null ? Result<List<UnsplashResponse>>.Failure("No photos found") 
+                              : Result<List<UnsplashResponse>>.Success(result);
     }
 
-    public Task LikePhoto()
+    public async Task LikePhoto()
     {
-        throw new NotImplementedException();
+        await Task.Delay(50);
     }
 
-    public async Task<List<UnsplashResponse>> SearchPhotos(string search)
+    public async Task<Result<List<UnsplashResponse>>> SearchPhotos(string search)
     {
-        return await _httpClient.GetFromJsonAsync<List<UnsplashResponse>>($"");
+        var result = await _httpClient.GetFromJsonAsync<List<UnsplashResponse>>(search);
+
+        return result is null ? Result<List<UnsplashResponse>>.Failure("No photos found")
+                              : Result<List<UnsplashResponse>>.Success(result);
     }
 }
 
 
 public interface IPhotoService
 {
-    Task<List<UnsplashResponse>> GetPhotos();
-    Task<List<UnsplashResponse>> SearchPhotos(string search);
+    Task<Result<List<UnsplashResponse>>> GetPhotos();
+    Task<Result<List<UnsplashResponse>>> SearchPhotos(string search);
     Task LikePhoto();
 }

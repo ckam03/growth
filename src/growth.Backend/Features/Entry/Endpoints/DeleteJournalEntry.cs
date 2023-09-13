@@ -1,13 +1,13 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
 
-namespace growth.Backend.Features.Entry;
+namespace growth.Backend.Features.Entry.Endpoints;
 
-public static class DeleteJournalEntry
+public class DeleteJournalEntry : IEndpoint
 {
-    public static RouteGroupBuilder MapDeleteJournalEntry(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapDelete("/{guid}", HandleAsync);
-        return app;
     }
 
     private static async Task<IResult> HandleAsync(GrowthDbContext context, Guid id)

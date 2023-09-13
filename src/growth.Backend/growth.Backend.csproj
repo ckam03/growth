@@ -5,7 +5,19 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c1c31033-3f97-4d41-8a9c-66cf12daa2ce</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\Entry\Requests\**" />
+    <Compile Remove="Features\Entry\Responses\**" />
+    <Content Remove="Features\Entry\Requests\**" />
+    <Content Remove="Features\Entry\Responses\**" />
+    <EmbeddedResource Remove="Features\Entry\Requests\**" />
+    <EmbeddedResource Remove="Features\Entry\Responses\**" />
+    <None Remove="Features\Entry\Requests\**" />
+    <None Remove="Features\Entry\Responses\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.6.0" />
@@ -18,13 +30,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.9" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="Respawn" Version="6.1.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Testcontainers" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Entry\Requests\" />
-    <Folder Include="Features\Entry\Responses\" />
     <Folder Include="Features\Entry\Validation\" />
     <Folder Include="Features\Motivation\Quotes\" />
     <Folder Include="Features\OpenAI\" />

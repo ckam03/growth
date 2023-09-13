@@ -1,18 +1,18 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace growth.Backend.Features.Motivation;
 
-public static class GetQuote
+public class GetQuote : IEndpoint
 {
     //need to make this cache at the start of a new day
-    public static RouteGroupBuilder MapGetQuote(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapGet("/", HandleAsync).CacheOutput();
-        return app;
     }
 
-    public static async Task<IResult> HandleAsync(GrowthDbContext context)
+    public async Task<IResult> HandleAsync(GrowthDbContext context)
     {
         Random rand = new();  
         int skipper = rand.Next(0, context.Quotes.Count() - 1);

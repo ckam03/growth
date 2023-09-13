@@ -1,14 +1,15 @@
-﻿namespace growth.Backend.Features.Unsplash;
+﻿using growth.Backend.Shared;
 
-public static class GetPhotos
+namespace growth.Backend.Features.Unsplash;
+
+public class GetPhotos : IEndpoint
 {
-    public static RouteGroupBuilder MapGetPhotos(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapGet("/", HandleAsync);
-        return app;
     }
 
-    public static async Task<IResult> HandleAsync(IPhotoService unsplashService)
+    public async Task<IResult> HandleAsync(IPhotoService unsplashService)
     {
         var photos = await unsplashService.GetPhotos();
         return Results.Ok(photos);

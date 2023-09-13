@@ -20,4 +20,14 @@ public class JournalEntryRoutesTests : IClassFixture<WebApplicationFactory<Progr
         //Act
         
     }
+
+    [Fact]
+    public async Task CreateEntry_Async() 
+    {
+        //Arrange
+        var client = _webApplicationFactory.CreateClient();
+
+        //Act
+        
+    }
 }

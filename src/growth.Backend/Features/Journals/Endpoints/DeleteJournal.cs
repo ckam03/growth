@@ -1,18 +1,17 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace growth.Backend.Features.Journals.Endpoints;
 
-public static class DeleteJournal
+public class DeleteJournal : IEndpoint
 {
-    public static RouteGroupBuilder MapDeleteJournal(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
-        app.MapDelete("/{id}", HandleAsync);
-        
-        return app;
+        app.MapDelete("/journal/{id}", HandleAsync).WithTags("Journal");
     }
 
-    public static async Task<IResult> HandleAsync([FromRoute]Guid id, GrowthDbContext context)
+    private async Task<IResult> HandleAsync([FromRoute] Guid id, GrowthDbContext context)
     {
         var journal = await context.Journals.FindAsync(id);
 

@@ -1,20 +1,22 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace growth.Backend.Features.Journals.Endpoints;
 
-public static class GetJournals
+public class GetJournals : IEndpoint
 {
-    public static RouteGroupBuilder MapGetJournals(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
-        app.MapGet("/", HandleAsync);
-        return app;
+        app.MapGet("/journal", HandleAsync).WithTags("Journal");
     }
-    public static async Task<IResult> HandleAsync(GrowthDbContext context) 
+
+    private async Task <Ok<List<JournalResponse>>> HandleAsync(GrowthDbContext context)
     {
         var journals = await context.Journals.Select(Mapper.ToResponse)
                                              .ToListAsync();
+
         return TypedResults.Ok(journals);
     }
 }
- 

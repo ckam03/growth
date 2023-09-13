@@ -1,16 +1,16 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
 
-namespace growth.Backend.Features.Entry;
+namespace growth.Backend.Features.Entry.Endpoints;
 
-public static class GetJournalEntry
+public class GetJournalEntry : IEndpoint
 {
-    public static RouteGroupBuilder MapGetJournalEntry(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapGet("/{guid}", HandleAsync);
-        return app;
     }
 
-    private static async Task<IResult> HandleAsync(GrowthDbContext context, Guid id)
+    private async Task<IResult> HandleAsync(GrowthDbContext context, Guid id)
     {
         var entry = await context.JournalEntries.FindAsync(id);
         return entry is null ? Results.NotFound() : Results.Ok(entry);

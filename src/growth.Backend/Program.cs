@@ -25,7 +25,7 @@ builder.Services.AddScoped<IValidator<JournalEntry>, JournalEntryValidator>();
 builder.Services.AddSingleton<ICacheService, InMemoryCache>();
 builder.Services.AddOutputCache(options => 
 {
-    options.AddBasePolicy(builder => 
+    options.AddBasePolicy(builder =>
     {
         builder.Expire(TimeSpan.FromMinutes(5));
     });
@@ -41,7 +41,7 @@ builder.Services.AddHttpClient<IPhotoService, UnsplashService>(httpClient =>
     httpClient.BaseAddress = new Uri("https://api.unsplash.com/");
 });
 
-builder.Services.Configure<JsonOptions>(options => 
+builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.PropertyNameCaseInsensitive = true;
 });
@@ -66,6 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ApplyMigrations();
 app.UseOutputCache();
 app.MapEndpoints();
 app.UseMiddleware<ErrorHandlingMiddleware>();

@@ -1,19 +1,20 @@
 ﻿using FluentValidation;
 using growth.Backend.Data;
+using growth.Backend.Shared;
 
-namespace growth.Backend.Features.Entry;
+namespace growth.Backend.Features.Entry.Endpoints;
 
-public static class CreateJournalEntry
+public class CreateJournalEntry : IEndpoint
 {
-    public static RouteGroupBuilder MapCreateJournalEntry(this RouteGroupBuilder app)
+
+    public void Map(WebApplication app)
     {
         app.MapPost("/", HandleAsync);
-        return app;
     }
 
-    private async static Task<IResult> HandleAsync(GrowthDbContext context, 
-                                                   CreateJournalEntryRequest request, 
-                                                   IValidator<JournalEntry> validator)
+    private async Task<IResult> HandleAsync(GrowthDbContext context,
+                                            CreateJournalEntryRequest request,
+                                            IValidator<JournalEntry> validator)
     {
         var journal = await context.Journals.FindAsync(request.JournalId);
         if (journal is null) { return Results.NotFound(); }
@@ -40,3 +41,8 @@ public static class CreateJournalEntry
         return TypedResults.Ok(entry);
     }
 }
+
+public record CreateJournalEntryRequest(
+    string Name,
+    string Entry,
+    Guid JournalId);

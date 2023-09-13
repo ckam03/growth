@@ -1,20 +1,21 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace growth.Backend.Features.Entry;
+namespace growth.Backend.Features.Entry.Endpoints;
 
-public static class UpdateJournalEntry
+public class UpdateJournalEntry : IEndpoint
 {
-    public static RouteGroupBuilder MapUpdateJournalEntry(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapPut("/", HandleAsync);
-        return app;
     }
 
-    private static async Task<IResult> HandleAsync(GrowthDbContext context,
-                                                   UpdateJournalEntryRequest request)
+    private async Task<Results<Ok<JournalEntry>, NotFound>> HandleAsync(GrowthDbContext context,
+                                                                        UpdateJournalEntryRequest request)
     {
         var entry = await context.JournalEntries.FindAsync(request.Id);
-        if (entry is null) { return Results.NotFound(); }
+        if (entry is null) { return TypedResults.NotFound(); }
 
         entry.Name = request.Name;
         entry.Entry = request.Entry;
@@ -23,6 +24,12 @@ public static class UpdateJournalEntry
         context.JournalEntries.Update(entry);
         await context.SaveChangesAsync();
 
-        return Results.Ok(entry);
+        return TypedResults.Ok(entry);
     }
 }
+
+public record UpdateJournalEntryRequest(
+    Guid Id,
+    string Name,
+    string Entry,
+    DateOnly Date);

@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using growth.Backend.Shared;
+using Microsoft.AspNetCore.Mvc;
 
 namespace growth.Backend.Features.Audio;
 
-public static class GetAudioFiles
+public class GetAudioFiles : IEndpoint
 {
-    public static RouteGroupBuilder MapGetAudioFiles(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
         app.MapGet("/", HandleAsync);
-        return app;
     }
 
-    public static async Task<IResult> HandleAsync([FromServices]IAudioService audioService)
+    public async Task<IResult> HandleAsync([FromServices]IAudioService audioService)
     {
         var audio = await audioService.CreateBucket();
 

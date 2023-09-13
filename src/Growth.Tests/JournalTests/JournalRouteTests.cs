@@ -1,27 +1,26 @@
 ﻿using System.Net.Http.Json;
 using growth.Backend.Features.Journals;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
 
 namespace Growth.Tests.JournalTests;
 
-public class JournalRouteTests : IClassFixture<WebApplicationFactory<Program>>
+public class JournalRouteTests : IAsyncLifetime
 {
-    private readonly WebApplicationFactory<Program> _webApplicationFactory;
+    private readonly HttpClient _httpClient;
+    private readonly Func<Task> _resetDatabase;
 
-    public JournalRouteTests(WebApplicationFactory<Program> webApplicationFactory)
+    public JournalRouteTests(GrowthApiFactory growthApiFactory)
     {
-        _webApplicationFactory = webApplicationFactory;
+        _httpClient = growthApiFactory.HttpClient;
+        _resetDatabase = growthApiFactory.ResetDatabaseAsync;
     }
 
     [Fact]
     public async Task GetJournalsAsync_Returns200()
     {
         //Arrange
-        var client = _webApplicationFactory.CreateClient();
 
         //Act
-        var response = await client.GetAsync("/journal");
+        var response = await _httpClient.GetAsync("/journal");
 
         //Assert
         Assert.True(response.IsSuccessStatusCode);
@@ -31,11 +30,10 @@ public class JournalRouteTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task CreateJournal_Returns200()
     {
         //Arrange
-        var client = _webApplicationFactory.CreateClient();
         const string journalName = "JournalTest";
 
         //Act
-        var response = await client.PostAsJsonAsync("/journal", journalName);
+        var response = await _httpClient.PostAsJsonAsync("/journal", journalName);
         var created = await response.Content.ReadFromJsonAsync<Journal>();
 
         //Assert
@@ -47,9 +45,11 @@ public class JournalRouteTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task DeleteJournalAsync_Returns200()
     {
         //Arrange
-        
         //Act
 
         //Assert
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+    public Task DisposeAsync() => _resetDatabase();
 }

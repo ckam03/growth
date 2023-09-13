@@ -1,17 +1,18 @@
 ﻿using growth.Backend.Data;
+using growth.Backend.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace growth.Backend.Features.Journals.Endpoints;
 
-public static class CreateJournal
+public class CreateJournal : IEndpoint
 {
-    public static RouteGroupBuilder MapCreateJournal(this RouteGroupBuilder app)
+    public void Map(WebApplication app)
     {
-        app.MapPost("/", HandleAsync);
-        return app;
+        app.MapPost("/journal", HandleAsync);
     }
 
-    private static async Task<IResult> HandleAsync(GrowthDbContext context, [FromBody]string name)
+    private async Task<Ok<Journal>> HandleAsync(GrowthDbContext context, [FromBody] string name)
     {
         var journal = new Journal { Id = Guid.NewGuid(), Name = name };
 
